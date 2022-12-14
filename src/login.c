@@ -1,20 +1,16 @@
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-struct pass {
+struct users {
+    int ID;
     char username[50];
-    char fname[50];
-    char lname[50];
-    char phone_number[50];
-};
-
-struct userpass {
     char password[50];
+    int roles;
 };
 
 void gotoxy(int x, int y);
+int countLines(FILE *file);
 void welcomePage();
 void adminLogin();
 void adminPanel();
@@ -47,12 +43,9 @@ void adminLogin() {
     char username[50];
     char password[50];
 
-    char ch;
+    FILE *fp;
 
-    FILE *fp, *fu;
-
-    struct pass u1;
-    struct userpass u2;
+    struct users user;
 
     fp = fopen("docs/admin.txt","rb");
     if (fp == NULL ){
@@ -75,8 +68,8 @@ void adminLogin() {
     scanf("%s", password);
     
 
-    while (fread(&u1, sizeof(u1),1, fp)) {
-        if (strcmp(username,u1.username)== 0) {
+    while (fread(&user, sizeof(user),1, fp)) {
+        if (strcmp(username,user.username)== 0) {
             adminPanel();
         }
         
@@ -142,14 +135,11 @@ void userLogin() {
     char username [50];
     char password [50];
 
-    char ch;
+    FILE *fp;
 
-    FILE *fp, *fu;
+    struct users user;
 
-    struct pass u1;
-    struct userpass u2;
-
-    fp = fopen ("docs/users.txt","rb");
+    fp = fopen ("docs/users.txt","r");
     if (fp == NULL ){
         printf("ERROR OPENING FILE");
     }
@@ -170,8 +160,8 @@ void userLogin() {
     scanf("%s", password);
     
 
-    while (fread(&u1, sizeof(u1),1, fp)) {
-        if (strcmp(username,u1.username)== 0) {
+    while (fread(&user, sizeof(user),1, fp)) {
+        if (strcmp(username,user.username)== 0) {
             userPanel();
         }
         
@@ -181,16 +171,11 @@ void userLogin() {
 }
 
 void userRegistration() {
-    char password [50];
-    int passwordlenght, i, seek = 0;
-    char ch;
+    FILE *fp, *fcount;
+    struct users user;
 
-    FILE *fp, *fu;
-    struct pass u1;
-    struct userpass p1;
-    struct userpass u2;
-
-    fp = fopen("docs/users.txt","ab");
+    fp = fopen("docs/users.txt","a");
+    fcount = fopen("docs/users.txt","r");
     system("clear");
 
     gotoxy(20,2);
@@ -199,27 +184,24 @@ void userRegistration() {
     printf ("User Register Form ");
     gotoxy(20,6);
     printf("============================================");
-    
+
     gotoxy(22,8);
-    printf("---= First name :   ");
-    scanf("%s",u1.fname);
-
-    gotoxy(22,10);
-    printf("---= Last Name  :   ");
-    scanf("%s",u1.lname);
-
-    gotoxy(22,12);
-    printf("---= username   :   ");
-    scanf("%s",u1.username);
+    printf("---= Username   :   ");
+    scanf("%s",user.username);
     getchar();
 
-    gotoxy(22,14);
-    printf("---= password   :   ");
-    scanf("%s", password);
+    gotoxy(22,10);
+    printf("---= Password   :   ");
+    scanf("%s", user.password);
 
-    fwrite(&u1, sizeof(u1),1,fp);
+    user.ID = countLines(fcount);
+    user.roles = 2;
+
+    fwrite(&user, sizeof(user),1,fp);
+    fwrite("\n", sizeof("\n"),1,fp);
+
     fclose(fp);
-    
+
     userOptions();
 }
 
