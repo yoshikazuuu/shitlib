@@ -6,11 +6,12 @@
 void gotoxy(int x, int y);
 
 struct users {
-  int ID;
-  char username[50];
-  char password[50];
-  int role;
+    int ID;
+    char username[50];
+    char password[50];
+    int role;
 };
+
 
 void gotoxy(int x, int y) {
   // Use the ANSI escape sequence "\033[y;xH" to move the cursor to the
@@ -18,39 +19,41 @@ void gotoxy(int x, int y) {
   printf("\033[%d;%dH", y, x);
 }
 
-int countLines(FILE *file) {
-  char buf[BUF_SIZE];
-  int counter = 0;
-  for (;;) {
-    size_t res = fread(buf, 1, BUF_SIZE, file);
-    if (ferror(file))
-      return -1;
+int countLines(FILE* file)
+{
+    char buf[BUF_SIZE];
+    int counter = 0;
+    for(;;)
+    {
+        size_t res = fread(buf, 1, BUF_SIZE, file);
+        if (ferror(file))
+            return -1;
 
-    int i;
-    for (i = 0; i < res; i++)
-      if (buf[i] == '\n')
-        counter++;
+        int i;
+        for(i = 0; i < res; i++)
+            if (buf[i] == '\n')
+                counter++;
 
-    if (feof(file))
-      break;
-  }
+        if (feof(file))
+            break;
+    }
 
-  return counter;
+    return counter;
 }
 
 int isExists(FILE *file, char username[]) {
-  struct users temp;
+    struct users temp;
 
-  while (fscanf(file, "%d %s %s %d", &temp.ID, temp.username, temp.password,
-                &temp.role) != EOF) {
-    printf("%s %s\n", temp.username, username);
-    if (!strcmp(temp.username, username)) {
-      system("clear");
-      printf("Username already exists. Please try again.\n");
-      getchar();
-      return 1;
+    while (fscanf(file, "%d %s %s %d", &temp.ID, temp.username, temp.password,
+                    &temp.role) != EOF) {
+        printf("%s %s\n", temp.username, username);
+        if (!strcmp(temp.username, username)) {
+            system("clear");
+            printf("Username already exists. Please try again.\n");
+            getchar();
+            return 1;
+        }
     }
-  }
-  fclose(file);
-  return 0;
-}
+    fclose(file);
+    return 0;
+} 
