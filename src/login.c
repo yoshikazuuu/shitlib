@@ -6,11 +6,12 @@ struct users {
     int ID;
     char username[50];
     char password[50];
-    int roles;
+    int role;
 };
 
 void gotoxy(int x, int y);
 int countLines(FILE *file);
+int isExists(FILE *file, char username[]);
 void welcomePage();
 void adminLogin();
 void adminPanel();
@@ -161,7 +162,7 @@ void userLogin() {
     
 
     while (fread(&user, sizeof(user),1, fp)) {
-        if (strcmp(username,user.username)== 0) {
+        if (strcmp(username,user.username) == 0) {
             userPanel();
         }
         
@@ -171,11 +172,11 @@ void userLogin() {
 }
 
 void userRegistration() {
-    FILE *fp, *fcount;
+    FILE *fp;
     struct users user;
 
     fp = fopen("docs/users.txt","a");
-    fcount = fopen("docs/users.txt","r");
+
     system("clear");
 
     gotoxy(20,2);
@@ -193,13 +194,22 @@ void userRegistration() {
     gotoxy(22,10);
     printf("---= Password   :   ");
     scanf("%s", user.password);
+    getchar();
 
-    user.ID = countLines(fcount);
-    user.roles = 2;
+    user.ID = countLines(fopen("docs/users.txt","r"));
+    user.role = 2;
 
-    fwrite(&user, sizeof(user),1,fp);
-    fwrite("\n", sizeof("\n"),1,fp);
+    if (isExists(fopen("docs/users.txt","r"), user.username)) {
+        userRegistration();
+    } 
+    else {
+        system("clear");
+        printf("User registered.\n");
+        getchar();
+    }
 
+
+    fprintf(fp, "%d %s %s %d\n", user.ID, user.username, user.password, user.role);
     fclose(fp);
 
     userOptions();
