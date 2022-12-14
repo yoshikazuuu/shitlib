@@ -149,7 +149,7 @@ void userLogin() {
     struct pass u1;
     struct userpass u2;
 
-    fp = fopen ("docs/username.txt","rb");
+    fp = fopen ("docs/users.txt","rb");
     if (fp == NULL ){
         printf("ERROR OPENING FILE");
     }
@@ -190,7 +190,7 @@ void userRegistration() {
     struct userpass p1;
     struct userpass u2;
 
-    fp = fopen("docs/username.txt","ab");
+    fp = fopen("docs/users.txt","ab");
     system("clear");
 
     gotoxy(20,2);
