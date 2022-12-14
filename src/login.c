@@ -1,3 +1,4 @@
+#include "../lib/momen.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -10,24 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-struct users {
-    int ID;
-    char username[50];
-    char password[50];
-    int role;
-};
-
-void gotoxy(int x, int y);
-int countLines(FILE *file);
-int isUsernameExists(FILE *file, char username[]);
-void headerLMS(char str[]);
-void welcomePage();
-void adminLogin();
-void adminPanel();
-void userOptions();
-void userLogin();
-void userRegistration();
-void userPanel();
 
 void welcomePage() {
     system(clear);
@@ -78,21 +61,20 @@ void adminLogin() {
     scanf("%s", password);
     
 
-    while (fscanf(fp, "%s %s", user.username, user.password)) {
+    while (fscanf(fp, "%s %s", user.username, user.password) != EOF) {
         if (!strcmp(username,user.username) && !strcmp(password,user.password)) {
             adminPanel();
-        } else {
-            gotoxy(22,12);
-            printf("Username or password is wrong. Try again.");
-            sleep(1);
-            adminLogin();
         }
     }
+    gotoxy(22,12);
+    printf("Username or password is wrong. Try again.");
+    sleep(1);
+    adminLogin();
+
     fclose(fp);
 }
 
 void userOptions() {
-    system(clear);
     int choice;
 
     headerLMS("User Menu");
@@ -127,6 +109,7 @@ void userOptions() {
             system(clear);
             gotoxy(15,8);
             printf("---= Thank you for using this app. Have a nice Day :) =---");
+            gotoxy(15,16);
             puts("\n");
             exit(0);
         break;
@@ -136,11 +119,10 @@ void userOptions() {
 void userLogin() {
     system(clear);
 
-    char username [50];
-    char password [50];
+    char username[50];
+    char password[50];
 
     FILE *fp;
-
     struct users user;
 
     fp = fopen ("docs/users.txt","r");
@@ -164,12 +146,15 @@ void userLogin() {
     scanf("%s", password);
     
 
-    while (fread(&user, sizeof(user),1, fp)) {
+    while (fscanf(fp, "%d %s %s %d", &user.ID, user.username, user.password, &user.role) != EOF) {
         if (!strcmp(username,user.username) && !strcmp(password,user.password)) {
             userPanel();
         }
-        
     }
+    gotoxy(22,12);
+    printf("Username or password is wrong. Try again.");
+    sleep(1);
+    userLogin();
 
     fclose(fp);
 }
@@ -191,7 +176,7 @@ void userRegistration() {
 
     gotoxy(22,8);
     printf("---= Username   :   ");
-    scanf("%s",user.username);
+    scanf("%s", user.username);
     getchar();
 
     gotoxy(22,10);
@@ -202,13 +187,14 @@ void userRegistration() {
     user.ID = countLines(fopen("docs/users.txt","r"));
     user.role = 2;
 
-    if (isExists(fopen("docs/users.txt","r"), user.username)) {
+    if (isUsernameExists(fopen("docs/users.txt","r"), user.username)) {
         userRegistration();
     } 
     else {
         system(clear);
+        gotoxy(30,12);
         printf("User registered.\n");
-        getchar();
+        sleep(1);
     }
 
 

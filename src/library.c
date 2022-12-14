@@ -6,28 +6,15 @@
 #define clear "clear"
 #endif
 
-#include "../lib/admin/function.h"
-#include <string.h>
+#include "../lib/momen.h"
 #include <stdio.h>
 #include <stdlib.h>
-
-void gotoxy(int x, int y);
-void headerLMS(char str[]);
-void adminPanel();
-void bookManagement();
-void userManagement();
-void userOptions();
-void userPanel();
-void addUser();
-void deleteUser();
-void listUsers();
+#include <string.h>
 
 void adminPanel(void){
-
-    system(clear);
     int choice;
 
-    headerLMS("Main Menu")
+    headerLMS("Main Menu");
 
     gotoxy(22,11);
     printf("----= 1. Book Management   ");
@@ -58,6 +45,7 @@ void adminPanel(void){
             system("clear");
             gotoxy(15,8);
             printf("---= Thank you for using this app. Have a nice Day :) =---");
+            gotoxy(15,16);
             puts("\n");
             exit(0);
         break;
@@ -65,21 +53,9 @@ void adminPanel(void){
 }
 
 void bookManagement(void){
-
-    system(clear);
     int choice;
 
-    gotoxy(20,2);
-    printf("============================================");
-    gotoxy(29,4);
-    printf ("Library Management System ");   
-    gotoxy(34,5);
-    printf ("Binus University ");
-    gotoxy(20,7);
-    printf("============================================");
-    gotoxy(37,9);
-
-    printf("Book Management");
+    headerLMS("Book Management");
 
     gotoxy(22,11);
     printf("----= 1. Add Book   ");
@@ -107,43 +83,36 @@ void bookManagement(void){
 
     switch (choice){
         case 1  : 
-            // addBook();
+            addBook();
+            bookManagement();
         break;
 
         case 2 :
-            // deleteBook();
+            deleteBook();
+            bookManagement();
         break;
 
         case 3 :
-            // searchBook();
+            searchBook();
+            bookManagement();
         break;
 
         case 4 :
-            // listBook();
+            listBook();
+            bookManagement();
         break;
 
         case 0 :
             adminPanel();
+            bookManagement();
         break;
     }
 }
 
 void userManagement(void){
-
-    system(clear);
     int choice;
 
-    gotoxy(20,2);
-    printf("============================================");
-    gotoxy(29,4);
-    printf ("Library Management System ");   
-    gotoxy(34,5);
-    printf ("Binus University ");
-    gotoxy(20,7);
-    printf("============================================");
-    
-    gotoxy(37,9);
-    printf ("User Management");
+    headerLMS("User Management");
 
     gotoxy(22,11);
     printf("----= 1. Add User   ");
@@ -184,20 +153,9 @@ void userManagement(void){
 }
 
 void userPanel() {
-    system(clear);
     int choice;
 
-    gotoxy(20,2);
-    printf("============================================");
-    gotoxy(29,4);
-    printf ("Library Management System ");   
-    gotoxy(34,5);
-    printf ("Binus University ");
-    gotoxy(20,7);
-    printf("============================================");
-    
-    gotoxy(37,9);
-    printf ("User Panel");
+    headerLMS("User Panel");
 
     gotoxy(22,11);
     printf("----= 1. List Book ");
@@ -221,17 +179,32 @@ void userPanel() {
     printf("----= Console :   "); 
     scanf("%d",&choice);
 
+    getchar();
+    
     switch (choice){
         case 1  : 
-            // addUser();
+            listBook();
+            userPanel();
         break;
 
         case 2 :
-            // deleteUser();
+            searchBook();
+            userPanel();
+        break;
+
+        case 3 :
+            searchBook();
+            userPanel();
+        break;
+
+        case 4 :
+            searchBook();
+            userPanel();
         break;
 
         case 0 :
             userOptions();
+            userPanel();
         break;
     }
 }

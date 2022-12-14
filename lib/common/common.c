@@ -1,3 +1,4 @@
+#include "../momen.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -10,19 +11,6 @@
 #include <stdlib.h>
 #include <string.h>
 #define BUF_SIZE 65536
-
-void gotoxy(int x, int y);
-int countLines(FILE* file);
-int isUsernameExists(FILE *file, char username[]);
-int isIDExists(FILE *file, int ID);
-void headerLMS(char str[]);
-
-struct users {
-    int ID;
-    char username[50];
-    char password[50];
-    int role;
-};
 
 void gotoxy(int x, int y) {
     printf("\033[%d;%dH", y, x);
@@ -56,6 +44,7 @@ int isUsernameExists(FILE *file, char username[]) {
         printf("%s %s\n", temp.username, username);
         if (!strcmp(temp.username, username)) {
             system(clear);
+            gotoxy(20,12);
             printf("Username already exists. Please try again.\n");
             sleep(1);
             return 1;
@@ -69,8 +58,9 @@ int isIDExists(FILE *file, int ID) {
     struct users temp;
 
     while (fscanf(file, "%d %s %s %d", &temp.ID, temp.username, temp.password, &temp.role) != EOF) {
-        if (!strcmp(temp.ID, ID)) {
+        if (temp.ID == ID) {
             system(clear);
+            gotoxy(20,12);
             printf("ID already exists. Please try again.\n");
             sleep(1);
             return 1;

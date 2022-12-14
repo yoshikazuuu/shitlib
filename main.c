@@ -1,3 +1,4 @@
+#include "lib/momen.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -6,14 +7,9 @@
 #define clear "clear"
 #endif
 
-#include "lib/function.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-
-void welcomePage();
-void adminLogin();
-void userOptions();
 
 int main(int argc, char** argv) {
 

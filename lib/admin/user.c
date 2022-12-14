@@ -1,3 +1,4 @@
+#include "../momen.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -10,33 +11,8 @@
 #include <stdlib.h>
 #include <string.h>
 
-
-void gotoxy(int x, int y);
-void headerLMS(char str[]);
-void addUser();
-void deleteUser();
-void listUsers();
-void userManagement();
-
-struct users {
-  int ID;
-  char username[50];
-  char password[50];
-  int role;
-};
-
 void addUser() {
-  system(clear);
-  gotoxy(20,2);
-  printf("============================================");
-  gotoxy(29,4);
-  printf ("Library Management System ");   
-  gotoxy(34,5);
-  printf ("Binus University ");
-  gotoxy(20,7);
-  printf("============================================");
-  gotoxy(37,9);
-  printf ("Add User");
+  headerLMS("Add User");
 
   struct users user;
   FILE *fp;
@@ -52,24 +28,10 @@ void addUser() {
   scanf("%d", &user.ID);
 
   // Check if ID already exists
-  struct users temp;
-  FILE *fp2;
-  fp2 = fopen("docs/users.txt", "r");
-  while (fscanf(fp2, "%d %s %s %d", &temp.ID, temp.username, temp.password,
-                &temp.role) != EOF) {
-    if (temp.ID == user.ID) {
-      gotoxy(22,12);
-      printf("ID already exists. Please try again.\n");
-      sleep(1);
-      addUser();
-    }
+  if (isIDExists(fopen("docs/users.txt","r"), user.ID)) {
+    addUser();
   }
 
-  if (isExists(fopen("docs/users.txt","r"), user.username)) {
-    userRegistration();
-  } 
-
-  fclose(fp2);
 
   gotoxy(22,13);
   printf("Enter username: ");
@@ -81,6 +43,9 @@ void addUser() {
   printf("Enter role: ");
   scanf("%d", &user.role);
 
+  if (isUsernameExists(fopen("docs/users.txt","r"), user.username)) {
+    addUser();
+  } 
   // check if role is valid
   if (user.role != 1 && user.role != 2) {
     gotoxy(22,19);
@@ -101,17 +66,7 @@ void addUser() {
 }
 
 void deleteUser() {
-  system(clear);
-  gotoxy(20,2);
-  printf("============================================");
-  gotoxy(29,4);
-  printf ("Library Management System ");   
-  gotoxy(34,5);
-  printf ("Binus University ");
-  gotoxy(20,7);
-  printf("============================================");
-  gotoxy(37,9);
-  printf ("Delete user");  
+  headerLMS("Delete User");
   struct users user;
   FILE *fp;
   fp = fopen("docs/users.txt", "r");
@@ -169,17 +124,7 @@ void deleteUser() {
 }
 
 void listUsers() {
-  system(clear);
-  gotoxy(20,2);
-  printf("============================================");
-  gotoxy(29,4);
-  printf ("Library Management System ");   
-  gotoxy(34,5);
-  printf ("Binus University ");
-  gotoxy(20,7);
-  printf("============================================");
-  gotoxy(37,9);
-  printf ("User Lists");
+  headerLMS("User Lists");
 
   struct users user;
   FILE *fp;
