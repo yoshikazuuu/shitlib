@@ -1,3 +1,11 @@
+#ifdef _WIN32
+#include <Windows.h>
+#define clear "cls"
+#else
+#include <unistd.h>
+#define clear "clear"
+#endif
+
 #include "lib/function.h"
 #include <stdio.h>
 #include <stdlib.h>

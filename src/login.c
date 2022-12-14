@@ -1,3 +1,11 @@
+#ifdef _WIN32
+#include <Windows.h>
+#define clear "cls"
+#else
+#include <unistd.h>
+#define clear "clear"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -11,7 +19,8 @@ struct users {
 
 void gotoxy(int x, int y);
 int countLines(FILE *file);
-int isExists(FILE *file, char username[]);
+int isUsernameExists(FILE *file, char username[]);
+void headerLMS(char str[]);
 void welcomePage();
 void adminLogin();
 void adminPanel();
@@ -21,25 +30,25 @@ void userRegistration();
 void userPanel();
 
 void welcomePage() {
-    system("clear");
+    system(clear);
 
     gotoxy(20,2);
     printf("============================================");
     gotoxy(20,4);
-    printf ("---= Welcome TO                         =---");   
-    gotoxy(20,5);
-    printf ("---= Library Management System          =---");
+    printf ("---=            Welcome TO              =---");   
     gotoxy(20,6);
-    printf ("---= Binus Universitry                  =---");
+    printf ("---=     Library Management System      =---");
     gotoxy(20,8);
+    printf ("---=         Binus Universitry          =---");
+    gotoxy(20,10);
     printf("============================================");
-    gotoxy(0, 12);
+    gotoxy(25, 12);
     printf("press any key to continue...");
     getchar();
 }
 
 void adminLogin() {
-    system("clear");
+    system(clear);
 
     char username[50];
     char password[50];
@@ -48,7 +57,7 @@ void adminLogin() {
 
     struct users user;
 
-    fp = fopen("docs/admin.txt","rb");
+    fp = fopen("docs/admin.txt","r");
     if (fp == NULL ){
         printf("ERROR OPENING FILE");
     }
@@ -69,31 +78,24 @@ void adminLogin() {
     scanf("%s", password);
     
 
-    while (fread(&user, sizeof(user),1, fp)) {
-        if (strcmp(username,user.username)== 0) {
+    while (fscanf(fp, "%s %s", user.username, user.password)) {
+        if (!strcmp(username,user.username) && !strcmp(password,user.password)) {
             adminPanel();
+        } else {
+            gotoxy(22,12);
+            printf("Username or password is wrong. Try again.");
+            sleep(1);
+            adminLogin();
         }
-        
     }
-
     fclose(fp);
 }
 
 void userOptions() {
-    system("clear");
+    system(clear);
     int choice;
 
-    gotoxy(20,2);
-    printf("============================================");
-    gotoxy(29,4);
-    printf ("Library Management System ");   
-    gotoxy(34,5);
-    printf ("Binus University ");
-    gotoxy(20,7);
-    printf("============================================");
-    
-    gotoxy(34,9);
-    printf ("User Menu ");
+    headerLMS("User Menu");
 
     gotoxy(22,11);
     printf("----= 1. Login   ");
@@ -122,16 +124,17 @@ void userOptions() {
         break;
 
         case 0 :
-            system("clear");
-            gotoxy(22,8);
+            system(clear);
+            gotoxy(15,8);
             printf("---= Thank you for using this app. Have a nice Day :) =---");
             puts("\n");
+            exit(0);
         break;
     }
 }
 
 void userLogin() {
-    system("clear");
+    system(clear);
 
     char username [50];
     char password [50];
@@ -162,7 +165,7 @@ void userLogin() {
     
 
     while (fread(&user, sizeof(user),1, fp)) {
-        if (strcmp(username,user.username) == 0) {
+        if (!strcmp(username,user.username) && !strcmp(password,user.password)) {
             userPanel();
         }
         
@@ -177,7 +180,7 @@ void userRegistration() {
 
     fp = fopen("docs/users.txt","a");
 
-    system("clear");
+    system(clear);
 
     gotoxy(20,2);
     printf("============================================");
@@ -203,7 +206,7 @@ void userRegistration() {
         userRegistration();
     } 
     else {
-        system("clear");
+        system(clear);
         printf("User registered.\n");
         getchar();
     }

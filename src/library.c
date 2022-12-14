@@ -1,30 +1,33 @@
+#ifdef _WIN32
+#include <Windows.h>
+#define clear "cls"
+#else
+#include <unistd.h>
+#define clear "clear"
+#endif
 
+#include "../lib/admin/function.h"
+#include <string.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 void gotoxy(int x, int y);
+void headerLMS(char str[]);
 void adminPanel();
 void bookManagement();
 void userManagement();
 void userOptions();
 void userPanel();
+void addUser();
+void deleteUser();
+void listUsers();
 
 void adminPanel(void){
 
-    system ("clear");
+    system(clear);
     int choice;
 
-    gotoxy(20,2);
-    printf("============================================");
-    gotoxy(29,4);
-    printf ("Library Management System ");   
-    gotoxy(34,5);
-    printf ("Binus University ");
-    gotoxy(20,7);
-    printf("============================================");
-    
-    gotoxy(37,9);
-    printf ("Main Menu");
+    headerLMS("Main Menu")
 
     gotoxy(22,11);
     printf("----= 1. Book Management   ");
@@ -53,16 +56,17 @@ void adminPanel(void){
 
         case 0 :
             system("clear");
-            gotoxy(22,8);
+            gotoxy(15,8);
             printf("---= Thank you for using this app. Have a nice Day :) =---");
             puts("\n");
+            exit(0);
         break;
     }
 }
 
 void bookManagement(void){
 
-    system ("clear");
+    system(clear);
     int choice;
 
     gotoxy(20,2);
@@ -73,9 +77,9 @@ void bookManagement(void){
     printf ("Binus University ");
     gotoxy(20,7);
     printf("============================================");
-    
     gotoxy(37,9);
-    printf ("Book Management");
+
+    printf("Book Management");
 
     gotoxy(22,11);
     printf("----= 1. Add Book   ");
@@ -98,6 +102,8 @@ void bookManagement(void){
     gotoxy(22, 23);
     printf("----= Console :   "); 
     scanf("%d",&choice);
+
+    getchar();
 
     switch (choice){
         case 1  : 
@@ -124,7 +130,7 @@ void bookManagement(void){
 
 void userManagement(void){
 
-    system ("clear");
+    system(clear);
     int choice;
 
     gotoxy(20,2);
@@ -160,15 +166,15 @@ void userManagement(void){
 
     switch (choice){
         case 1  : 
-            // addUser();
+            addUser();
         break;
 
         case 2 :
-            // deleteUser();
+            deleteUser();
         break;
 
         case 3:
-            // listUser();
+            listUsers();
         break;
 
         case 0 :
@@ -178,7 +184,7 @@ void userManagement(void){
 }
 
 void userPanel() {
-    system ("clear");
+    system(clear);
     int choice;
 
     gotoxy(20,2);

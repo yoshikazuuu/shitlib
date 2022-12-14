@@ -1,9 +1,21 @@
+#ifdef _WIN32
+#include <Windows.h>
+#define clear "cls"
+#else
+#include <unistd.h>
+#define clear "clear"
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #define BUF_SIZE 65536
 
 void gotoxy(int x, int y);
+int countLines(FILE* file);
+int isUsernameExists(FILE *file, char username[]);
+int isIDExists(FILE *file, int ID);
+void headerLMS(char str[]);
 
 struct users {
     int ID;
@@ -12,14 +24,11 @@ struct users {
     int role;
 };
 
-
 void gotoxy(int x, int y) {
-    // Use the ANSI escape sequence "\033[y;xH" to move the cursor to the specified position
     printf("\033[%d;%dH", y, x);
 }
 
-int countLines(FILE* file)
-{
+int countLines(FILE* file) {
     char buf[BUF_SIZE];
     int counter = 0;
     for(;;)
@@ -40,19 +49,47 @@ int countLines(FILE* file)
     return counter;
 }
 
-int isExists(FILE *file, char username[]) {
+int isUsernameExists(FILE *file, char username[]) {
     struct users temp;
 
-    while (fscanf(file, "%d %s %s %d", &temp.ID, temp.username, temp.password,
-                    &temp.role) != EOF) {
+    while (fscanf(file, "%d %s %s %d", &temp.ID, temp.username, temp.password, &temp.role) != EOF) {
         printf("%s %s\n", temp.username, username);
         if (!strcmp(temp.username, username)) {
-            system("clear");
+            system(clear);
             printf("Username already exists. Please try again.\n");
-            getchar();
+            sleep(1);
             return 1;
         }
     }
     fclose(file);
     return 0;
 } 
+
+int isIDExists(FILE *file, int ID) {
+    struct users temp;
+
+    while (fscanf(file, "%d %s %s %d", &temp.ID, temp.username, temp.password, &temp.role) != EOF) {
+        if (!strcmp(temp.ID, ID)) {
+            system(clear);
+            printf("ID already exists. Please try again.\n");
+            sleep(1);
+            return 1;
+        }
+    }
+    fclose(file);
+    return 0;
+} 
+
+void headerLMS(char str[]) {
+    system(clear);
+    gotoxy(20,2);
+    printf("============================================");
+    gotoxy(29,4);
+    printf ("Library Management System ");   
+    gotoxy(34,5);
+    printf ("Binus University ");
+    gotoxy(20,7);
+    printf("============================================");
+    gotoxy(37,9);
+    printf("%s", str);
+}
