@@ -1,4 +1,2 @@
 0 root admin 1
-1 fani silviani 2
-2 nisa apr 2
-3 le no 2
+1 user rxyhn 2

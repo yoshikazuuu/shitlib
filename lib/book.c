@@ -32,44 +32,61 @@ void addBook() {
   fclose(fp);
 }
 
-void deleteBook() {
-  headerLMS("Delete Book");
-  gotoxy(22, 11);
-  FILE *fp, *ft;
-  char id[10];
+void deleteBook () {
+  headerLMS("Delete book");
+  struct books book;
+  FILE *fp;
   fp = fopen("docs/book.csv", "r");
-  ft = fopen("docs/bookTemp.csv", "w");
+  if (fp == NULL) {
+    system(clear);
+    printf("File doesn't exists.");
+    sleep(1);
+    userManagement();
+  }
   gotoxy(22, 13);
-  printf("Enter Book ID : ");
-  scanf("%s", id);
-  char buffer[1024];
-  int row = 12;
-  int column = 0;
-  while (fgets(buffer, 1024, fp)) {
-    column = 0;
-    char *value = strtok(buffer, ",");
-    while (value) {
-      printf("%s", value);
-      if (strcmp(value, id))
-        printf("PEN TURUUUU");
-      value = strtok(NULL, ",");
-      column++;
+  printf("Enter ID: ");
+  scanf("%d", &book.id);
+
+  // Check if ID exists
+  struct books temp;
+  FILE *fp2;
+  fp2 = fopen("docs/book.csv", "r");
+  int found = 0;
+  while (fscanf(fp2, "%d, %1001[^,], %1001[^,],", &temp.id, temp.book_name, temp.author) != EOF) {
+    if (temp.id == book.id) {
+      found = 1;
+      break;
     }
   }
-  getchar();
-  getchar();
-  getchar();
-  // while (fscanf(fp, "%d %[^,] %[^,]", &book.id, book.book_name, book.author)
-  // != EOF) {
-  //     if (book.id != id) {
-  //         fprintf(ft, "%d, %s, %s\n", book.id, book.book_name, book.author);
-  //     }
-  // }
+  fclose(fp2);
+
+  if (found == 0) {
+    gotoxy(23, 12);
+    printf("ID does not exist. Please try again.\n");
+    sleep(1);
+    deleteBook();
+  }
+
+  // Delete the book by the id
+  FILE *fp3;
+  fp3 = fopen("temp.csv", "w");
+  while (fscanf(fp, "%d, %1001[^,], %1001[^,],", &temp.id, temp.book_name, temp.author) != EOF) {
+    if (temp.id != book.id) {
+      fprintf(fp3, "%d, %s, %s,\n", temp.id, temp.book_name, temp.author);
+    }
+  }
+
   fclose(fp);
-  fclose(ft);
-  // remove("docs/book.csv");
-  // rename("docs/bookTemp.csv", "docs/book.csv");
-  // remove("docs/bookTemp.csv");
+  fclose(fp3);
+
+  remove("docs/book.csv");
+  rename("temp.csv", "docs/book.csv");
+
+  gotoxy(22, 13);
+  printf("Book deleted.\n");
+  sleep(1);
+
+  bookManagement();
 }
 
 void listBook() {
@@ -100,6 +117,7 @@ void listBook() {
       column++;
     }
   }
+
   getchar();
 
   fclose(fp);
@@ -140,34 +158,49 @@ void borrowBook() {
   struct books book;
   FILE *fp;
   fp = fopen("docs/book.csv", "r");
-  while (fscanf(fp, "%d, %[^,], %[^,],\n", &book.id, book.book_name,
+  int found = 0;
+  while (fscanf(fp, "%d, %1001[^,], %1001[^,],", &book.id, book.book_name,
                 book.author) != EOF) {
     if (book.id == id) {
-      // if book is available then add to docs/borrow.csv
-      FILE *fp2;
-      fp2 = fopen("docs/borrow.csv", "a");
-      fprintf(fp2, "%d, %s, %s,\n", book.id, book.book_name, book.author);
-      fclose(fp2);
-
-      // remove book from docs/book.csv
-      FILE *fp3;
-      fp3 = fopen("docs/book.csv", "w");
-      while (fscanf(fp, "%d, %[^,], %[^,],\n", &book.id, book.book_name,
-                    book.author) != EOF) {
-        if (book.id != id) {
-          fprintf(fp3, "%d, %s, %s,\n", book.id, book.book_name, book.author);
-        }
-      }
-      fclose(fp3);
-
-      // show book is borrowed
-      printf("Book is borrowed\n");
-
+      found = 1;
       break;
-    } else {
-      printf("Book is not available\n");
     }
   }
+  fclose(fp);
+
+  if (found == 0) {
+    printf("Book isn't available!\n");
+    sleep(1);
+    return;
+  }
+
+  // if book is available then add to docs/borrow.csv
+  FILE *fp2;
+  fp2 = fopen("docs/borrow.csv", "a");
+  fprintf(fp2, "%d, %s, %s,\n", book.id, book.book_name, book.author);
+  fclose(fp2);
+
+  // remove book from docs/book.csv
+  FILE *fp3;
+  fp3 = fopen("temp.csv", "w");
+
+  FILE *fp4;
+  fp4 = fopen("docs/book.csv", "r");
+  while (fscanf(fp4, "%d, %1001[^,], %1001[^,],", &book.id, book.book_name,
+                book.author) != EOF) {
+    if (book.id != id) {
+      fprintf(fp3, "%d, %s, %s,\n", book.id, book.book_name, book.author);
+    }
+  }
+  fclose(fp4);
+  fclose(fp3);
+
+  remove("docs/book.csv");
+  rename("temp.csv", "docs/book.csv");
+
+  // show book is borrowed
+  printf("Book is borrowed\n");
+  sleep(1);
 }
 
 void returnBook() {
@@ -193,32 +226,47 @@ void returnBook() {
 
   // check book is available or not
   fp = fopen("docs/borrow.csv", "r");
+  int found = 0;
   while (fscanf(fp, "%d, %[^,], %[^,],\n", &book.id, book.book_name,
                 book.author) != EOF) {
     if (book.id == id) {
-      // if book is available then add to docs/book.csv
-      FILE *fp2;
-      fp2 = fopen("docs/book.csv", "a");
-      fprintf(fp2, "%d, %s, %s,\n", book.id, book.book_name, book.author);
-      fclose(fp2);
-
-      // remove book from docs/borrow.csv
-      FILE *fp3;
-      fp3 = fopen("docs/borrow.csv", "w");
-      while (fscanf(fp, "%d, %[^,], %[^,],\n", &book.id, book.book_name,
-                    book.author) != EOF) {
-        if (book.id != id) {
-          fprintf(fp3, "%d, %s, %s,\n", book.id, book.book_name, book.author);
-        }
-      }
-      fclose(fp3);
-
-      // show book is returned
-      printf("Book is returned\n");
-
+      found = 1;
       break;
-    } else {
-      printf("Book is not available\n");
     }
   }
+  fclose(fp);
+
+  if (found == 0) {
+    printf("Book isn't available!\n");
+    sleep(1);
+    return;
+  }
+
+  // if book is available then add to docs/book.csv
+  FILE *fp2;
+  fp2 = fopen("docs/book.csv", "a");
+  fprintf(fp2, "%d, %s, %s,\n", book.id, book.book_name, book.author);
+  fclose(fp2);
+
+  // remove book from docs/borrow.csv
+  FILE *fp3;
+  fp3 = fopen("temp.csv", "w");
+
+  FILE *fp4;
+  fp4 = fopen("docs/borrow.csv", "r");
+  while (fscanf(fp4, "%d, %[^,], %[^,],\n", &book.id, book.book_name,
+                book.author) != EOF) {
+    if (book.id != id) {
+      fprintf(fp3, "%d, %s, %s,\n", book.id, book.book_name, book.author);
+    }
+  }
+  fclose(fp4);
+  fclose(fp3);
+
+  remove("docs/borrow.csv");
+  rename("temp.csv", "docs/borrow.csv");
+
+  // show book is returned
+  printf("Book is returned\n");
+  sleep(1);
 }

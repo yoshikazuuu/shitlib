@@ -64,18 +64,15 @@ void bookManagement(void){
     printf("----= 2. Delete Book   ");
 
     gotoxy(22,15);
-    printf("----= 3. Search Book ");
-
-    gotoxy(22,17);
-    printf("----= 4. List Book ");
+    printf("----= 3. List Book ");
     
-    gotoxy(22, 19);
+    gotoxy(22, 17);
     printf("----= 0. Go back ");
 
-    gotoxy(20,21);
+    gotoxy(20,20);
     printf("============================================");
 
-    gotoxy(22, 23);
+    gotoxy(22, 22);
     printf("----= Console :   "); 
     scanf("%d",&choice);
 
@@ -93,11 +90,6 @@ void bookManagement(void){
         break;
 
         case 3 :
-            searchBook();
-            bookManagement();
-        break;
-
-        case 4 :
             listBook();
             bookManagement();
         break;
@@ -161,21 +153,18 @@ void userPanel() {
     printf("----= 1. List Book ");
 
     gotoxy(22,13);
-    printf("----= 2. Search Book ");
+    printf("----= 2. Borrow Book ");
 
-    gotoxy(22,15);
-    printf("----= 3. Borrow Book ");
-
-    gotoxy(22, 17);
-    printf("----= 4. Return Book");
+    gotoxy(22, 15);
+    printf("----= 3. Return Book");
     
-    gotoxy(22, 19);
+    gotoxy(22, 17);
     printf("----= 0. Log Out");
 
-    gotoxy(20,21);
+    gotoxy(20,19);
     printf("============================================");
 
-    gotoxy(22,23);
+    gotoxy(22,21);
     printf("----= Console :   "); 
     scanf("%d",&choice);
 
@@ -188,17 +177,12 @@ void userPanel() {
         break;
 
         case 2 :
-            searchBook();
+            borrowBook();
             userPanel();
         break;
 
         case 3 :
-            searchBook();
-            userPanel();
-        break;
-
-        case 4 :
-            searchBook();
+            returnBook();
             userPanel();
         break;
 
