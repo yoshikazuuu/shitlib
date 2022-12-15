@@ -13,7 +13,6 @@
 
 void welcomePage() {
   system(clear);
-
   gotoxy(20, 2);
   printf("============================================");
   gotoxy(20, 4);
