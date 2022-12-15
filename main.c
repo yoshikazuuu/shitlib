@@ -12,7 +12,6 @@
 #include <string.h>
 
 int main(int argc, char** argv) {
-
     if (argc < 2) {
         welcomePage();
         system("clear");
@@ -22,9 +21,9 @@ int main(int argc, char** argv) {
     else if (argc == 2 && !strcmp(argv[1], "admin")) {
         welcomePage();
         system("clear");
-        printf("You've attemped to login as admin.\n");    
+        printf("You've attemped to login as admin.\n");
         adminLogin();
-    } 
+    }
     else {
         printf("\nArgument not found.\nAvailable argument:\n1. (none) -> login as user.\n2. admin -> login as admin.\n\n");
     }

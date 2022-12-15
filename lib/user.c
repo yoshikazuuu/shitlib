@@ -1,4 +1,4 @@
-#include "../momen.h"
+#include "momen.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -23,7 +23,7 @@ void addUser() {
     sleep(1);
     userManagement();
   }
-  gotoxy(22,11);  
+  gotoxy(22,11);
   printf("Enter ID: ");
   scanf("%d", &user.ID);
 
@@ -45,7 +45,7 @@ void addUser() {
 
   if (isUsernameExists(fopen("docs/users.txt","r"), user.username)) {
     addUser();
-  } 
+  }
   // check if role is valid
   if (user.role != 1 && user.role != 2) {
     gotoxy(22,19);

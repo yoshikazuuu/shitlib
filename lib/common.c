@@ -1,4 +1,4 @@
-#include "../momen.h"
+#include "momen.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -52,7 +52,7 @@ int isUsernameExists(FILE *file, char username[]) {
     }
     fclose(file);
     return 0;
-} 
+}
 
 int isIDExists(FILE *file, int ID) {
     struct users temp;
@@ -68,14 +68,14 @@ int isIDExists(FILE *file, int ID) {
     }
     fclose(file);
     return 0;
-} 
+}
 
 void headerLMS(char str[]) {
     system(clear);
     gotoxy(20,2);
     printf("============================================");
     gotoxy(29,4);
-    printf ("Library Management System ");   
+    printf ("Library Management System ");
     gotoxy(34,5);
     printf ("Binus University ");
     gotoxy(20,7);
