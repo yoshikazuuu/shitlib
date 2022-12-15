@@ -23,15 +23,20 @@ void addUser() {
     sleep(1);
     userManagement();
   }
-  gotoxy(22,11);
-  printf("Enter ID: ");
-  scanf("%d", &user.ID);
 
-  // Check if ID already exists
-  if (isIDExists(fopen("docs/users.txt","r"), user.ID)) {
-    addUser();
+  // increment ID
+  struct users temp;
+  FILE *fp2;
+  fp2 = fopen("docs/users.txt", "r");
+  int maxID = 0;
+  while (fscanf(fp2, "%d %s %s %d", &temp.ID, temp.username, temp.password,
+                &temp.role) != EOF) {
+    if (temp.ID > maxID) {
+      maxID = temp.ID;
+    }
   }
-
+  fclose(fp2);
+  user.ID = maxID + 1;
 
   gotoxy(22,13);
   printf("Enter username: ");
@@ -39,7 +44,12 @@ void addUser() {
   gotoxy(22,15);
   printf("Enter password: ");
   scanf("%s", user.password);
+
   gotoxy(22,17);
+  printf("1. Admin\n");
+  gotoxy(22,19);
+  printf("2. User\n");
+  gotoxy(22,21);
   printf("Enter role: ");
   scanf("%d", &user.role);
 
@@ -48,7 +58,7 @@ void addUser() {
   }
   // check if role is valid
   if (user.role != 1 && user.role != 2) {
-    gotoxy(22,19);
+    gotoxy(22,23);
     printf("Invalid role. Please try again.\n");
     sleep(1);
     addUser();
@@ -57,8 +67,7 @@ void addUser() {
   fprintf(fp, "%d %s %s %d\n", user.ID, user.username, user.password, user.role);
   fclose(fp);
 
-
-  gotoxy(22,19);
+  gotoxy(22,23);
   printf("User added.\n");
   sleep(1);
 
