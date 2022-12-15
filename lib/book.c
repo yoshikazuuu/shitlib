@@ -1,4 +1,4 @@
-#include "momen.h"
+#include "header.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -12,19 +12,19 @@
 #include <string.h>
 
 void addBook() {
-  headerLMS("Add Book");
-  gotoxy(22, 11);
+  int rep = listBook("docs/book.csv");
   struct books book;
   FILE *fp;
   fp = fopen("docs/book.csv", "a");
+  gotoxy(22, rep += 2);
   printf("Enter Book ID : ");
   scanf("%d", &book.id);
   getchar();
-  gotoxy(22, 13);
+  gotoxy(22, rep += 2);
   printf("Enter Book Name : ");
   scanf("%[^\n]s", book.book_name);
   getchar();
-  gotoxy(22, 15);
+  gotoxy(22, rep += 2);
   printf("Enter Author Name : ");
   scanf("%[^\n]s", book.author);
   getchar();
@@ -32,8 +32,10 @@ void addBook() {
   fclose(fp);
 }
 
-void deleteBook () {
-  headerLMS("Delete book");
+void deleteBook() {
+
+  int rep = listBook("docs/book.csv");
+
   struct books book;
   FILE *fp;
   fp = fopen("docs/book.csv", "r");
@@ -43,7 +45,7 @@ void deleteBook () {
     sleep(1);
     userManagement();
   }
-  gotoxy(22, 13);
+  gotoxy(22, rep += 2);
   printf("Enter ID: ");
   scanf("%d", &book.id);
 
@@ -52,7 +54,8 @@ void deleteBook () {
   FILE *fp2;
   fp2 = fopen("docs/book.csv", "r");
   int found = 0;
-  while (fscanf(fp2, "%d, %1001[^,], %1001[^,],", &temp.id, temp.book_name, temp.author) != EOF) {
+  while (fscanf(fp2, "%d, %1001[^,], %1001[^,],", &temp.id, temp.book_name,
+                temp.author) != EOF) {
     if (temp.id == book.id) {
       found = 1;
       break;
@@ -70,7 +73,8 @@ void deleteBook () {
   // Delete the book by the id
   FILE *fp3;
   fp3 = fopen("temp.csv", "w");
-  while (fscanf(fp, "%d, %1001[^,], %1001[^,],", &temp.id, temp.book_name, temp.author) != EOF) {
+  while (fscanf(fp, "%d, %1001[^,], %1001[^,],", &temp.id, temp.book_name,
+                temp.author) != EOF) {
     if (temp.id != book.id) {
       fprintf(fp3, "%d, %s, %s,\n", temp.id, temp.book_name, temp.author);
     }
@@ -82,18 +86,14 @@ void deleteBook () {
   remove("docs/book.csv");
   rename("temp.csv", "docs/book.csv");
 
-  gotoxy(22, 13);
+  gotoxy(22, rep += 2);
   printf("Book deleted.\n");
   sleep(1);
-
-  bookManagement();
 }
 
-void listBook() {
-  headerLMS("List Book");
+int listBook(char csv[]) {
   FILE *fp;
-  fp = fopen("docs/book.csv", "r");
-  system(clear);
+  fp = fopen(csv, "r");
   gotoxy(13, 11);
   printf("Book ID\t\t   Book Name\t      Author Name\n");
   // while (fscanf(fp, "%d %s %s", &book.id, book.book_name, book.author) !=
@@ -117,38 +117,37 @@ void listBook() {
       column++;
     }
   }
-
-  getchar();
-
   fclose(fp);
+
+  return row;
 }
 
-void searchBook() {
-  headerLMS("Search Book");
-  struct books book;
-  FILE *fp;
-  char book_name[1001];
-  fp = fopen("docs/book.csv", "r");
-  gotoxy(22, 11);
-  printf("Enter Book Name : ");
-  scanf("%[^\n]", book_name);
-  while (fscanf(fp, "%d %[^,]s %[^,]s", &book.id, book.book_name,
-                book.author) != EOF) {
-    if (strcmp(book_name, book.book_name) == 0) {
-      printf("%d\t%s\t%s\n", book.id, book.book_name, book.author);
-    }
-  }
-  fclose(fp);
-}
+// void searchBook() {
+//   headerLMS("Search Book");
+//   struct books book;
+//   FILE *fp;
+//   char book_name[1001];
+//   fp = fopen("docs/book.csv", "r");
+//   gotoxy(22, 11);
+//   printf("Enter Book Name : ");
+//   scanf("%[^\n]", book_name);
+//   while (fscanf(fp, "%d %[^,]s %[^,]s", &book.id, book.book_name,
+//                 book.author) != EOF) {
+//     if (strcmp(book_name, book.book_name) == 0) {
+//       printf("%d\t%s\t%s\n", book.id, book.book_name, book.author);
+//     }
+//   }
+//   fclose(fp);
+// }
 
 void borrowBook() {
   headerLMS("Borrow Book");
 
   // show book list
-  listBook();
+  int rep = listBook("docs/book.csv");
 
   // select book by id
-  gotoxy(22, 22);
+  gotoxy(22, rep += 2);
   int id;
   printf("Enter Book ID : ");
   scanf("%d", &id);
@@ -199,27 +198,21 @@ void borrowBook() {
   rename("temp.csv", "docs/book.csv");
 
   // show book is borrowed
+  gotoxy(22, rep += 2);
   printf("Book is borrowed\n");
   sleep(1);
 }
 
 void returnBook() {
-  headerLMS("Return Book");
 
   // show borrow list
   struct books book;
   FILE *fp;
-  fp = fopen("docs/borrow.csv", "r");
-  printf("ID\tBook Name\tAuthor Name\t\n");
-  while (fscanf(fp, "%d, %[^,], %[^,],\n", &book.id, book.book_name,
-                book.author) != EOF) {
-    printf("%d\t%s\t%s\t\n", book.id, book.book_name, book.author);
-  }
-  fclose(fp);
+  int rep = listBook("docs/borrow.csv");
 
   // select book by id
-  gotoxy(22, 22);
   int id;
+  gotoxy(22, rep += 2);
   printf("Enter Book ID : ");
   scanf("%d", &id);
   getchar();
@@ -237,6 +230,7 @@ void returnBook() {
   fclose(fp);
 
   if (found == 0) {
+    gotoxy(22, rep += 2);
     printf("Book isn't available!\n");
     sleep(1);
     return;
@@ -267,6 +261,7 @@ void returnBook() {
   rename("temp.csv", "docs/borrow.csv");
 
   // show book is returned
+  gotoxy(22, rep += 2);
   printf("Book is returned\n");
   sleep(1);
 }

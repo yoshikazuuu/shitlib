@@ -1,4 +1,4 @@
-#include "momen.h"
+#include "header.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -12,9 +12,12 @@
 #include <string.h>
 
 void addUser() {
-  headerLMS("Add User");
+
+  int rep = listUsers();
 
   struct users user;
+  memset(&user, 0, sizeof user);
+
   FILE *fp;
   fp = fopen("docs/users.txt", "a");
   if (fp == NULL) {
@@ -23,6 +26,7 @@ void addUser() {
     sleep(1);
     userManagement();
   }
+  // printf("%d %s %s %d\n", user.ID, user.username, user.password, user.role);
 
   // increment ID
   struct users temp;
@@ -38,44 +42,49 @@ void addUser() {
   fclose(fp2);
   user.ID = maxID + 1;
 
-  gotoxy(22,13);
+  gotoxy(22, rep);
   printf("Enter username: ");
   scanf("%s", user.username);
-  gotoxy(22,15);
+  gotoxy(22, rep += 2);
   printf("Enter password: ");
   scanf("%s", user.password);
 
-  gotoxy(22,17);
+  gotoxy(22, rep += 2);
   printf("1. Admin\n");
-  gotoxy(22,19);
+  gotoxy(22, rep += 1);
   printf("2. User\n");
-  gotoxy(22,21);
+  gotoxy(22, rep += 2);
   printf("Enter role: ");
   scanf("%d", &user.role);
 
-  if (isUsernameExists(fopen("docs/users.txt","r"), user.username)) {
+  if (isUsernameExists(fopen("docs/users.txt", "r"), user.username)) {
+    fclose(fp);
+    headerLMS("Add User");
     addUser();
   }
   // check if role is valid
   if (user.role != 1 && user.role != 2) {
-    gotoxy(22,23);
+    fclose(fp);
+    gotoxy(22, rep += 2);
     printf("Invalid role. Please try again.\n");
     sleep(1);
+    headerLMS("Add User");
     addUser();
   }
 
-  fprintf(fp, "%d %s %s %d\n", user.ID, user.username, user.password, user.role);
+  fprintf(fp, "%d %s %s %d\n", user.ID, user.username, user.password,
+          user.role);
   fclose(fp);
 
-  gotoxy(22,23);
+  system(clear);
+  gotoxy(35, 11);
   printf("User added.\n");
   sleep(1);
-
-  userManagement();
 }
 
 void deleteUser() {
-  headerLMS("Delete User");
+  int rep = listUsers();
+
   struct users user;
   FILE *fp;
   fp = fopen("docs/users.txt", "r");
@@ -85,7 +94,7 @@ void deleteUser() {
     sleep(1);
     userManagement();
   }
-  gotoxy(22,11);
+  gotoxy(22, rep);
   printf("Enter ID: ");
   scanf("%d", &user.ID);
 
@@ -104,9 +113,10 @@ void deleteUser() {
   fclose(fp2);
 
   if (found == 0) {
-    gotoxy(23,12);
+    gotoxy(23, rep += 2);
     printf("ID does not exist. Please try again.\n");
     sleep(1);
+    headerLMS("Delete User");
     deleteUser();
   }
 
@@ -125,16 +135,12 @@ void deleteUser() {
   remove("docs/users.txt");
   rename("temp.txt", "docs/users.txt");
 
-  gotoxy(22,13);
+  gotoxy(22, rep += 2);
   printf("User deleted.\n");
   sleep(1);
-
-  userManagement();
 }
 
-void listUsers() {
-  headerLMS("User Lists");
-
+int listUsers() {
   struct users user;
   FILE *fp;
   fp = fopen("docs/users.txt", "r");
@@ -142,20 +148,17 @@ void listUsers() {
     printf("File doesn't exists.");
     userManagement();
   }
-  gotoxy(28,11);
+  gotoxy(28, 11);
   printf("ID  Username   Password  Role\n");
   int rep = 12;
-  while (fscanf(fp, "%d %s %s %d", &user.ID, user.username, user.password, &user.role) != EOF) {
-    gotoxy(28,rep++);
-    printf("%2d  %-8s   %-8s  %-2d\n", user.ID, user.username, user.password, user.role);
+  while (fscanf(fp, "%d %s %s %d", &user.ID, user.username, user.password,
+                &user.role) != EOF) {
+    gotoxy(28, rep++);
+    printf("%2d  %-8s   %-8s  %-2d\n", user.ID, user.username, user.password,
+           user.role);
   }
-
-  gotoxy(28, ++rep);
-  printf("Enter to continue.\n");
-  getchar();
-  getchar();
   fclose(fp);
+  gotoxy(28, ++rep);
 
-
-  userManagement();
+  return rep;
 }

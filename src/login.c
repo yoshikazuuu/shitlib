@@ -1,4 +1,4 @@
-#include "../lib/momen.h"
+#include "../lib/header.h"
 #ifdef _WIN32
 #include <Windows.h>
 #define clear "cls"
@@ -17,7 +17,7 @@ void welcomePage() {
   gotoxy(20, 2);
   printf("============================================");
   gotoxy(20, 4);
-  printf("---=            Welcome TO              =---");
+  printf("---=            Welcome to              =---");
   gotoxy(20, 6);
   printf("---=     Library Management System      =---");
   gotoxy(20, 8);

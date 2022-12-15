@@ -1,6 +1,6 @@
 // #ifndef MARKER
 // #define MARKER
-// // declarations 
+// // declarations
 // #include "lib/common/function.h"
 // #include "lib/admin/book/function.h"
 // #include "lib/admin/user/function.h"
@@ -9,19 +9,20 @@
 #include <stdio.h>
 
 void gotoxy(int x, int y);
-int countLines(FILE* file);
+int countLines(FILE *file);
 int isUsernameExists(FILE *file, char username[]);
 int isIDExists(FILE *file, int ID);
 void headerLMS(char str[]);
 void addUser();
 void deleteUser();
-void listUsers();
+int listUsers();
 void userManagement();
 void userRegistration();
 void addBook();
 void deleteBook();
-void listBook();
-void searchBook();
+int listBook(char csv[]);
+void borrowBook();
+void returnBook();
 void adminPanel();
 void bookManagement();
 void userOptions();
