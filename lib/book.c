@@ -12,7 +12,7 @@
 #include <string.h>
 
 void addBook() {
-  int rep = listBook("docs/book.csv");
+  int rep = listBook("docs/book.csv", 11);
   struct books book;
   FILE *fp;
   fp = fopen("docs/book.csv", "a");
@@ -34,7 +34,7 @@ void addBook() {
 
 void deleteBook() {
 
-  int rep = listBook("docs/book.csv");
+  int rep = listBook("docs/book.csv", 11);
 
   struct books book;
   FILE *fp;
@@ -91,17 +91,17 @@ void deleteBook() {
   sleep(1);
 }
 
-int listBook(char csv[]) {
+int listBook(char csv[], int pos) {
   FILE *fp;
   fp = fopen(csv, "r");
-  gotoxy(13, 11);
+  gotoxy(13, pos);
   printf("Book ID\t\t   Book Name\t      Author Name\n");
   // while (fscanf(fp, "%d %s %s", &book.id, book.book_name, book.author) !=
   // EOF) {
   //   printf("%d\t\t%s\t\t%s\n", book.id, book.book_name, book.author);
   // }
   char buffer[1024];
-  int row = 12;
+  int row = pos += 1;
   int column = 0;
   while (fgets(buffer, 1024, fp)) {
     column = 0;
@@ -144,7 +144,7 @@ void borrowBook() {
   headerLMS("Borrow Book");
 
   // show book list
-  int rep = listBook("docs/book.csv");
+  int rep = listBook("docs/book.csv", 11);
 
   // select book by id
   gotoxy(22, rep += 2);
@@ -208,7 +208,7 @@ void returnBook() {
   // show borrow list
   struct books book;
   FILE *fp;
-  int rep = listBook("docs/borrow.csv");
+  int rep = listBook("docs/borrow.csv", 11);
 
   // select book by id
   int id;

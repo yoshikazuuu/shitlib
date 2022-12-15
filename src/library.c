@@ -96,8 +96,12 @@ void bookManagement(void) {
   case 3:
     system(clear);
     headerLMS("List Book");
-    int rep = listBook("docs/book.csv");
+    int rep = listBook("docs/book.csv", 11);
+    gotoxy(37, rep += 2);
+    printf("Borrowed");
     gotoxy(32, rep += 2);
+    rep += listBook("docs/borrow.csv", rep);
+    gotoxy(32, rep);
     printf("Enter to continue.\n");
     getchar();
     bookManagement();
@@ -196,7 +200,7 @@ void userPanel() {
   case 1:
     system(clear);
     headerLMS("List Book");
-    int rep = listBook("docs/book.csv");
+    int rep = listBook("docs/book.csv", 11);
     gotoxy(32, rep += 2);
     printf("Enter to continue.\n");
     getchar();

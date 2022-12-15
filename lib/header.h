@@ -20,7 +20,7 @@ void userManagement();
 void userRegistration();
 void addBook();
 void deleteBook();
-int listBook(char csv[]);
+int listBook(char csv[], int pos);
 void borrowBook();
 void returnBook();
 void adminPanel();
