@@ -37,10 +37,10 @@ This app is made in C language, with a library concept, so this app has library 
 
 ```sh
 # Clone this repository
-git clone https://github.com/Yoshikazuuu/labAssignment.git
+git clone https://github.com/yoshikazuuu/shitlib.git
 
 # Change directory to the git folder
-cd labAssignment
+cd shitlib
 
 # Build the binary
 make
